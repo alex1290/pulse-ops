@@ -1,0 +1,5 @@
+project             = "pulse-ops"
+region              = "ap-northeast-1"
+kubernetes_version  = "1.33"
+node_instance_types = ["t3.medium"]
+node_desired_size   = 2

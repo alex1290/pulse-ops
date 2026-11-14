@@ -1,0 +1,26 @@
+resource "aws_ecr_repository" "api" {
+  name                 = "pulse-api"
+  image_tag_mutability = "IMMUTABLE"
+  force_delete         = true # 練習用：destroy 時連同 image 一起刪除
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+resource "aws_ecr_lifecycle_policy" "api" {
+  repository = aws_ecr_repository.api.name
+
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "Keep last 20 images"
+      selection = {
+        tagStatus   = "any"
+        countType   = "imageCountMoreThan"
+        countNumber = 20
+      }
+      action = { type = "expire" }
+    }]
+  })
+}
